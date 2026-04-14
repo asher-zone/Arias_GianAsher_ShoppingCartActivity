@@ -32,11 +32,12 @@ class Program
 {
     static void Main()
     {
-      Product[] store = new Product[3]; //created an array of products to represent the store's inventory
+      Product[] store = new Product[4]; //created an array of products to represent the store's inventory
 
-    store[0] = new Product { Id = 1, Name = "Bottled Water", Price = 15, RemainingStock = 30 };
-    store[1] = new Product { Id = 2, Name = "Potato Chips", Price = 20, RemainingStock = 25 };
-    store[2] = new Product { Id = 3, Name = "Coke", Price = 25, RemainingStock = 30 };
+    store[0] = new Product { Id = 1, Name = "Backpack", Price = 1500, RemainingStock = 300 };
+    store[1] = new Product { Id = 2, Name = "Running Shoes", Price = 2000, RemainingStock = 250 };
+    store[2] = new Product { Id = 3, Name = "Tumbler", Price = 500, RemainingStock = 300 };
+    store[3] = new Product { Id = 4, Name = "Badminton Racket", Price = 3000, RemainingStock = 0 };
 
     //menu display
     for (int i = 0; i < store.Length; i++)  
