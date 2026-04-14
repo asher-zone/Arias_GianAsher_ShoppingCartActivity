@@ -32,22 +32,25 @@ class Program
 {
     static void Main()
     {
-      Product[] store = new Product[4]; //created an array of products to represent the store's inventory
+      Product[] store = new Product[5]; //created an array of products to represent the store's inventory
 
     store[0] = new Product { Id = 1, Name = "Backpack", Price = 1500, RemainingStock = 300 };
     store[1] = new Product { Id = 2, Name = "Running Shoes", Price = 2000, RemainingStock = 250 };
     store[2] = new Product { Id = 3, Name = "Tumbler", Price = 500, RemainingStock = 300 };
     store[3] = new Product { Id = 4, Name = "Badminton Racket", Price = 3000, RemainingStock = 0 };
+    store[4] = new Product { Id = 5, Name = "Yoga Mat", Price = 800, RemainingStock = 200 };
 
     //menu display
+    Console.WriteLine("--- Welcome to the Store! ---");
+    Console.WriteLine("Available Products:");
     for (int i = 0; i < store.Length; i++)  
     {
         store[i].DisplayProduct();
     }
 
     //cart management
-    Product[] cart = new Product[10]; //stores the products added to the cart
-    int[] quantities = new int[10]; //stores the quantities of each product in the cart
+    Product[] cart = new Product[3]; //stores the products added to the cart
+    int[] quantities = new int[3]; //stores the quantities of each product in the cart
     int cartCount = 0;  // keeps track of the number of items in the cart
 
     //user input and validation
@@ -92,8 +95,36 @@ class Program
     }
 
     Console.WriteLine("Valid input! Proceeding..."); 
-    }
-
     
-}
+    //preventing duplicate entries in the cart and updating quantities if the product is already in the cart
+    bool found = false;
 
+    for (int i = 0; i < cartCount; i++)
+    {
+        if (cart[i].Id == selected.Id)
+        {
+            quantities[i] += qty;
+            found = true;
+            break;
+        }
+    }
+    if (!found)
+        {
+            if (cartCount >= cart.Length)
+            {
+                Console.WriteLine("Cart is full.");
+                continue;
+            }
+
+            cart[cartCount] = selected;
+            quantities[cartCount] = qty;
+            cartCount++;
+        }
+    selected.DeductStock(qty);
+    Console.WriteLine("Item added to cart!");
+
+        Console.Write("Add more? (Y/N): ");
+        string again = Console.ReadLine();
+
+        if (again.ToUpper() != "Y")
+            break;
