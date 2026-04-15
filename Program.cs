@@ -113,7 +113,17 @@ class Program
             if (cartCount >= cart.Length)
             {
                 Console.WriteLine("Cart is full.");
-                continue;
+                
+                Console.Write("Add more? (Y/N): ");
+                string againFull = Console.ReadLine();
+
+                if (againFull.ToUpper() != "Y")
+                {
+                    break; // exit loop → go to receipt
+                }
+                else
+                {
+                    continue; // go back to menu
             }
 
             cart[cartCount] = selected;
@@ -128,3 +138,41 @@ class Program
 
         if (again.ToUpper() != "Y")
             break;
+ //displaying the updated stock after purchase
+        Console.WriteLine("\nUpdated Stock:");
+
+        for (int i = 0; i < store.Length; i++)
+        {
+            store[i].DisplayProduct();
+        }
+    }
+        //displaying the cart contents and calculating the total price
+        double grandTotal = 0;
+
+        Console.WriteLine("\n--- RECEIPT ---");
+
+        for (int i = 0; i < cartCount; i++)
+        {
+            double total = cart[i].GetItemTotal(quantities[i]);
+            grandTotal += total;
+
+            Console.WriteLine($"{cart[i].Name} x{quantities[i]} = ₱{total}");
+        }
+        double discount = 0;
+
+        if (grandTotal >= 5000)
+        {
+            discount = grandTotal * 0.10;
+        }
+
+        double finalTotal = grandTotal - discount;
+
+        Console.WriteLine($"Grand Total: ₱{grandTotal}");
+        Console.WriteLine($"Discount: ₱{discount}");
+        Console.WriteLine($"Final Total: ₱{finalTotal}");
+
+
+
+    }
+
+}
