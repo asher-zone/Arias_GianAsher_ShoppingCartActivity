@@ -11,7 +11,7 @@ A console-based Shopping Cart System in C# using classes, objects, and an array 
 - Checks stock availability before adding items
 - Handles out-of-stock products
 - Prevents duplicate cart entries
-- Limits cart size and shows "Cart is full" message
+- Limits cart size (up to three (3) unique products only) and shows "Cart is full" message
 - Allows continuous shopping until user chooses to exit or "N"
 - Calculates:
   - Item totals
