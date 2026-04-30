@@ -70,20 +70,23 @@ class Program
             switch (menuChoice)
             {
                 case 1:
+                    Console.WriteLine("\nAvailable Products:");
                     for (int i = 0; i < store.Length; i++)
                         store[i].DisplayProduct();
                     break;
 
                 case 2:
+                    Console.WriteLine("\nSearch Product selected.");
                     SearchProduct(store);
                     break;
 
                 case 3:
+                    Console.WriteLine("\nFilter by Category selected.");
                     FilterByCategory(store);
                     break;
 
                 case 4:
-                    Console.WriteLine("Add to cart selected.");
+                    Console.WriteLine("\nAdd to cart selected.");
 
                     while (true)
                     {
@@ -144,7 +147,7 @@ class Program
                             if (cartCount >= cart.Length)
                             {
                                 Console.WriteLine("Cart is full.");
-
+                                continue;
                             }
 
                             cart[cartCount] = selected;
@@ -155,22 +158,23 @@ class Program
                         selected.DeductStock(qty);
                         Console.WriteLine("Item added to cart!");
 
-                        //ask user if they want to continue
-                        if (!AskYesNo("Add more? (Y/N): "))
+                        //ASK USER IF THEY WANT TO CONTINUE
+                        if (!AskYesNo("\nAdd more? (Y/N): "))
                             break;
                     }
 
-                    //opens cart menu if user inputs n
+                    //AFTER USER FINISHES ADDING → OPEN CART MENU
                     CartMenu(store, cart, quantities, ref cartCount);
 
                     break;
             
 
                 case 5:
-                    Checkout(store, cart, quantities, ref cartCount);
+                    Console.WriteLine("Exiting program...Goodbye!");
                     return;
                 
                 case 6:
+                    Console.WriteLine("\nView Order History selected.");
                     ShowOrderHistory();
                     break;
 
@@ -180,7 +184,7 @@ class Program
             }
         }   
     }
-        static void CartMenu(Product[] store, Product[] cart, int[] quantities, ref int cartCount)
+             static void CartMenu(Product[] store, Product[] cart, int[] quantities, ref int cartCount)
         {
             while (true)
             {
@@ -204,22 +208,27 @@ class Program
                 switch (choice)
                 {
                     case 1:
+                        Console.WriteLine("\nView Cart selected.");
                         ViewCart(cart, quantities, cartCount);
                         break;
 
                     case 2:
+                        Console.WriteLine("\nRemove Item selected.");
                         RemoveItem(cart, quantities, ref cartCount);
                         break;
 
                     case 3:
+                        Console.WriteLine("\nUpdate Quantity selected.");
                         UpdateQuantity(cart, quantities, cartCount);
                         break;
 
                     case 4:
+                        Console.WriteLine("\nClear Cart selected.");
                         ClearCart(ref cartCount);
                         break;
 
                     case 5:
+                        Console.WriteLine("\nCheckout selected.");
                         double finalTotal = ShowReceipt(cart, quantities, cartCount);
 
                         double payment = ProcessPayment(finalTotal);
