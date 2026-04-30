@@ -409,3 +409,101 @@ class Program
 
                 return finalTotal;
             }
+
+            static double ProcessPayment(double finalTotal)
+            {
+                while (true)
+                {
+                    Console.Write("Enter payment: ");
+                    string input = Console.ReadLine();
+
+                    if (!double.TryParse(input, out double payment))
+                    {
+                        Console.WriteLine("Invalid input! Enter a number.");
+                        continue;
+                    }
+
+                    if (payment < finalTotal)
+                    {
+                        Console.WriteLine("Insufficient payment.");
+                        continue;
+                    }
+
+                    double change = payment - finalTotal;
+
+                    Console.WriteLine($"Payment: ₱{payment}");
+                    Console.WriteLine($"Change: ₱{change}");
+
+                    return payment;
+                }
+            }
+            static void ShowOrderHistory()
+            {
+                if (orderCount == 0)
+                {
+                    Console.WriteLine("No orders yet.");
+                    return;
+                }
+
+                Console.WriteLine("\n--- ORDER HISTORY ---");
+
+                for (int i = 0; i < orderCount; i++)
+                {
+                    Console.WriteLine(orderHistory[i]);
+                }
+            }
+            static bool AskYesNo(string message)
+            {
+                while (true)
+                {
+                    Console.Write(message);
+                    string input = Console.ReadLine().ToUpper();
+
+                    if (input == "Y") return true;
+                    if (input == "N") return false;
+
+                    Console.WriteLine("Invalid input. Please enter Y or N only.");
+                }
+            }
+            static void ShowLowStock(Product[] store)
+            {
+                Console.WriteLine("\n--- LOW STOCK ALERT ---");
+
+                bool hasLowStock = false;
+
+                for (int i = 0; i < store.Length; i++)
+                {
+                    if (store[i].RemainingStock > 0 && store[i].RemainingStock <= 5)
+                    {
+                        Console.WriteLine($"{store[i].Name} has only {store[i].RemainingStock} stocks left.");
+                        hasLowStock = true;
+                    }
+                }
+
+                if (!hasLowStock)
+                {
+                    Console.WriteLine("All products have sufficient stock.");
+                }
+            }
+            static void Checkout(Product[] store, Product[] cart, int[] quantities, ref int cartCount)
+            {
+                double finalTotal = ShowReceipt(cart, quantities, cartCount);
+
+                double payment = ProcessPayment(finalTotal);
+
+                Console.WriteLine("\nProcessing complete...");
+                ShowLowStock(store);
+
+                // SAVE ORDER
+                if (orderCount < orderHistory.Length)
+                {
+                    orderHistory[orderCount] = $"Receipt #{receiptCounter:D4} - Final Total: ₱{finalTotal}";
+                    orderCount++;
+                }
+
+                receiptCounter++;
+
+                // clear cart after checkout
+                cartCount = 0;
+            }
+}
