@@ -10,7 +10,7 @@ class Product //created product class with properties and methods to manage prod
 
     public void DisplayProduct() // shows the product details
     {
-        Console.WriteLine($"{Id}. {Name} - ₱{Price} (Stock: {RemainingStock}) [{Category}]");
+        Console.WriteLine($"{Id}. {Name} - PHP {Price} (Stock: {RemainingStock}) [{Category}]");
     }
 
     public double GetItemTotal(int quantity) // calculates the total price for a given quantity of a product
@@ -147,7 +147,7 @@ class Program
                             if (cartCount >= cart.Length)
                             {
                                 Console.WriteLine("Cart is full.");
-                                continue;
+                                break;
                             }
 
                             cart[cartCount] = selected;
@@ -229,24 +229,12 @@ class Program
 
                     case 5:
                         Console.WriteLine("\nCheckout selected.");
-                        double finalTotal = ShowReceipt(cart, quantities, cartCount);
-
-                        double payment = ProcessPayment(finalTotal);
-
-                        //LOW STOCK ALERTTT
-                        Console.WriteLine("\nProcessing complete...");
-                        ShowLowStock(store);
-
-                        //SAVE TO ORDER HISTORY
-                        if (orderCount < orderHistory.Length)
+                        if (cartCount == 0)
                         {
-                            orderHistory[orderCount] = $"Receipt #{receiptCounter:D4} - Final Total: ₱{finalTotal}";
-                            orderCount++;
+                            Console.WriteLine("Cart is empty. Cannot checkout.");
+                            continue;
                         }
-
-                        receiptCounter++;
-
-
+                        Checkout(store, cart, quantities, ref cartCount);
                         return;// exit cart menu → proceed to checkout
 
                     default:
@@ -396,7 +384,7 @@ class Program
                     double total = cart[i].GetItemTotal(quantities[i]);
                     grandTotal += total;
 
-                    Console.WriteLine($"{cart[i].Name} x{quantities[i]} = ₱{total}");
+                    Console.WriteLine($"{cart[i].Name} x{quantities[i]} = PHP {total}");
                 }
 
                 double discount = 0;
@@ -410,11 +398,11 @@ class Program
 
                 //RECEIPT NUMBER + DATE
                 Console.WriteLine($"\nReceipt No: {receiptCounter:D4}");
-                Console.WriteLine($"Date: {DateTime.Now}");
+                Console.WriteLine($"Date: {DateTime.Now:MMMM dd, yyyy hh:mm tt}");
 
-                Console.WriteLine($"Grand Total: ₱{grandTotal}");
-                Console.WriteLine($"Discount: ₱{discount}");
-                Console.WriteLine($"Final Total: ₱{finalTotal}");
+                Console.WriteLine($"Grand Total: PHP {grandTotal}");
+                Console.WriteLine($"Discount: PHP {discount}");
+                Console.WriteLine($"Final Total: PHP {finalTotal}");
 
                 return finalTotal;
             }
@@ -440,8 +428,8 @@ class Program
 
                     double change = payment - finalTotal;
 
-                    Console.WriteLine($"Payment: ₱{payment}");
-                    Console.WriteLine($"Change: ₱{change}");
+                    Console.WriteLine($"Payment: PHP {payment}");
+                    Console.WriteLine($"Change: PHP {change}");
 
                     return payment;
                 }
@@ -482,7 +470,12 @@ class Program
 
                 for (int i = 0; i < store.Length; i++)
                 {
-                    if (store[i].RemainingStock > 0 && store[i].RemainingStock <= 5)
+                    if (store[i].RemainingStock == 0)
+                    {
+                        Console.WriteLine($"{store[i].Name} is OUT OF STOCK.");
+                        hasLowStock = true;
+                    }
+                    else if (store[i].RemainingStock <= 5)
                     {
                         Console.WriteLine($"{store[i].Name} has only {store[i].RemainingStock} stocks left.");
                         hasLowStock = true;
@@ -506,7 +499,7 @@ class Program
                 // SAVE ORDER
                 if (orderCount < orderHistory.Length)
                 {
-                    orderHistory[orderCount] = $"Receipt #{receiptCounter:D4} - Final Total: ₱{finalTotal}";
+                    orderHistory[orderCount] = $"Receipt #{receiptCounter:D4} - Final Total: PHP {finalTotal}";
                     orderCount++;
                 }
 
