@@ -336,3 +336,76 @@ class Program
 
             Console.WriteLine("Item removed.");
         }
+            static void UpdateQuantity(Product[] cart, int[] quantities, int cartCount)
+        {
+            if (cartCount == 0)
+            {
+                Console.WriteLine("Cart is empty.");
+                return;
+            }
+
+            ViewCart(cart, quantities, cartCount);
+
+            Console.Write("Enter item number to update: ");
+            string input = Console.ReadLine();
+
+            if (!int.TryParse(input, out int index) || index < 1 || index > cartCount)
+            {
+                Console.WriteLine("Invalid selection.");
+                return;
+            }
+
+            Console.Write("Enter new quantity: ");
+            string qtyInput = Console.ReadLine();
+
+            if (!int.TryParse(qtyInput, out int newQty) || newQty <= 0)
+            {
+                Console.WriteLine("Invalid quantity.");
+                return;
+            }
+
+            quantities[index - 1] = newQty;
+
+            Console.WriteLine("Quantity updated.");
+        }
+            static void ClearCart(ref int cartCount)
+            {
+            cartCount = 0;
+            Console.WriteLine("Cart cleared.");
+            }
+
+            static int receiptCounter = 1; // global counter
+
+            static double ShowReceipt(Product[] cart, int[] quantities, int cartCount)
+            {
+                double grandTotal = 0;
+
+                Console.WriteLine("\n--- RECEIPT ---");
+
+                for (int i = 0; i < cartCount; i++)
+                {
+                    double total = cart[i].GetItemTotal(quantities[i]);
+                    grandTotal += total;
+
+                    Console.WriteLine($"{cart[i].Name} x{quantities[i]} = ₱{total}");
+                }
+
+                double discount = 0;
+
+                if (grandTotal >= 5000)
+                {
+                    discount = grandTotal * 0.10;
+                }
+
+                double finalTotal = grandTotal - discount;
+
+                //RECEIPT NUMBER + DATE
+                Console.WriteLine($"\nReceipt No: {receiptCounter:D4}");
+                Console.WriteLine($"Date: {DateTime.Now}");
+
+                Console.WriteLine($"Grand Total: ₱{grandTotal}");
+                Console.WriteLine($"Discount: ₱{discount}");
+                Console.WriteLine($"Final Total: ₱{finalTotal}");
+
+                return finalTotal;
+            }
