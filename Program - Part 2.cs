@@ -180,3 +180,159 @@ class Program
             }
         }   
     }
+        static void CartMenu(Product[] store, Product[] cart, int[] quantities, ref int cartCount)
+        {
+            while (true)
+            {
+                Console.WriteLine("\n=== CART MENU ===");
+                Console.WriteLine("1. View Cart");
+                Console.WriteLine("2. Remove Item");
+                Console.WriteLine("3. Update Quantity");
+                Console.WriteLine("4. Clear Cart");
+                Console.WriteLine("5. Checkout");
+                Console.WriteLine("6. View Order History");
+
+                Console.Write("Choose an option: ");
+                string input = Console.ReadLine();
+
+                if (!int.TryParse(input, out int choice))
+                {
+                    Console.WriteLine("Invalid input!");
+                    continue;
+                }
+
+                switch (choice)
+                {
+                    case 1:
+                        ViewCart(cart, quantities, cartCount);
+                        break;
+
+                    case 2:
+                        RemoveItem(cart, quantities, ref cartCount);
+                        break;
+
+                    case 3:
+                        UpdateQuantity(cart, quantities, cartCount);
+                        break;
+
+                    case 4:
+                        ClearCart(ref cartCount);
+                        break;
+
+                    case 5:
+                        double finalTotal = ShowReceipt(cart, quantities, cartCount);
+
+                        double payment = ProcessPayment(finalTotal);
+
+                        //LOW STOCK ALERTTT
+                        Console.WriteLine("\nProcessing complete...");
+                        ShowLowStock(store);
+
+                        //SAVE TO ORDER HISTORY
+                        if (orderCount < orderHistory.Length)
+                        {
+                            orderHistory[orderCount] = $"Receipt #{receiptCounter:D4} - Final Total: ₱{finalTotal}";
+                            orderCount++;
+                        }
+
+                        receiptCounter++;
+
+
+                        return;// exit cart menu → proceed to checkout
+
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        break;
+                }
+            }
+        }
+            //search for products
+            static void SearchProduct(Product[] store)
+        {
+            Console.Write("Enter product name to search: ");
+            string keyword = Console.ReadLine().ToLower();
+
+            bool found = false;
+
+            for (int i = 0; i < store.Length; i++)
+            {
+                if (store[i].Name.ToLower().Contains(keyword))
+                {
+                    store[i].DisplayProduct();
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine("No matching products found.");
+            }
+        }
+            //search and/or filter by category
+            static void FilterByCategory(Product[] store)
+        {
+            Console.Write("Enter category: ");
+            string category = Console.ReadLine().ToLower();
+
+            bool found = false;
+
+            for (int i = 0; i < store.Length; i++)
+            {
+                if (store[i].Category.ToLower() == category)
+                {
+                    store[i].DisplayProduct();
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine("No products in this category.");
+            }
+        }
+            static void ViewCart(Product[] cart, int[] quantities, int cartCount)
+        {
+            if (cartCount == 0)
+            {
+                Console.WriteLine("Cart is empty.");
+                return;
+            }
+
+            Console.WriteLine("\n--- YOUR CART ---");
+
+            for (int i = 0; i < cartCount; i++)
+            {
+                Console.WriteLine($"{i + 1}. {cart[i].Name} x{quantities[i]}");
+            }
+        }
+            static void RemoveItem(Product[] cart, int[] quantities, ref int cartCount)
+        {
+            if (cartCount == 0)
+            {
+                Console.WriteLine("Cart is empty.");
+                return;
+            }
+
+            ViewCart(cart, quantities, cartCount);
+
+            Console.Write("Enter item number to remove: ");
+            string input = Console.ReadLine();
+
+            if (!int.TryParse(input, out int index) || index < 1 || index > cartCount)
+            {
+                Console.WriteLine("Invalid selection.");
+                return;
+            }
+
+            index--; // adjust index
+
+            for (int i = index; i < cartCount - 1; i++)
+            {
+                cart[i] = cart[i + 1];
+                quantities[i] = quantities[i + 1];
+            }
+
+            cartCount--;
+
+            Console.WriteLine("Item removed.");
+        }
